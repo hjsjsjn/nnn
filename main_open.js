@@ -2,7 +2,6 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160/build/three.mod
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/loaders/GLTFLoader.js";
 
-
 const container = document.getElementById('canvasWrap');
 const showAllBtn = document.getElementById('showAll');
 const toggleDoorBtn = document.getElementById("toggleDoor");
@@ -18,7 +17,7 @@ container.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 
 /* ================= BACKGROUND ================= */
-new THREE.TextureLoader().load('panaroma.jpg', tex => {
+new THREE.TextureLoader().load('./panaroma.jpg', tex => {
   tex.mapping = THREE.EquirectangularReflectionMapping;
   scene.background = tex;
 });
@@ -161,6 +160,7 @@ function animate() {
 }
 
 animate();
+
 
 
 
