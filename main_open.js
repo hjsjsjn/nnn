@@ -77,21 +77,14 @@ scene.add(hotspot);
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-/* ================= LOAD GER (STATIC) ================= 
-loader.load(
-  "ger.glb",
-  (gltf) => {
-    console.log("MODEL LOADED");
-    scene.add(gltf.scene);
-  },
-  undefined,
-  (err) => {
-    console.error("MODEL ERROR", err);
-  }
-);*/
+/* ================= LOAD GER (STATIC) ================= */
+loader.load('./ger_.glb', gltf => {
+  gerModel = gltf.scene;
+  scene.add(gerModel);
+});
 
 /* ================= LOAD CLOSED DOOR ================= */
-loader.load('haalga1.glb', gltf => {
+loader.load("./haalga1.glb', gltf => {
   doorClosed = gltf.scene;
   scene.add(doorClosed);
 
@@ -160,6 +153,7 @@ function animate() {
 }
 
 animate();
+
 
 
 
