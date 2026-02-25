@@ -18,7 +18,7 @@ container.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 
 /* ================= BACKGROUND ================= */
-new THREE.TextureLoader().load('./textures/panaroma.jpg', tex => {
+new THREE.TextureLoader().load('panaroma.jpg', tex => {
   tex.mapping = THREE.EquirectangularReflectionMapping;
   scene.background = tex;
 });
@@ -79,13 +79,13 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 /* ================= LOAD GER (STATIC) ================= */
-loader.load('./models/ger_.glb', gltf => {
+loader.load('ger_.glb', gltf => {
   gerModel = gltf.scene;
   scene.add(gerModel);
 });
 
 /* ================= LOAD CLOSED DOOR ================= */
-loader.load('./models/haalga1.glb', gltf => {
+loader.load('haalga1.glb', gltf => {
   doorClosed = gltf.scene;
   scene.add(doorClosed);
 
@@ -99,7 +99,7 @@ loader.load('./models/haalga1.glb', gltf => {
 });
 
 /* ================= LOAD OPEN DOOR ================= */
-loader.load('./models/haalga1_o.glb', gltf => {
+loader.load('haalga1_o.glb', gltf => {
   doorOpen = gltf.scene;
   doorOpen.visible = false;
   scene.add(doorOpen);
@@ -209,3 +209,4 @@ function animate() {
 }
 
 animate();
+
