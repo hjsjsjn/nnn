@@ -84,7 +84,7 @@ loader.load('./ger_.glb', gltf => {
 });
 
 /* ================= LOAD CLOSED DOOR ================= */
-loader.load("./haalga1.glb', gltf => {
+loader.load('./haalga1.glb', gltf => {
   doorClosed = gltf.scene;
   scene.add(doorClosed);
 
@@ -153,6 +153,7 @@ function animate() {
 }
 
 animate();
+
 
 
 
