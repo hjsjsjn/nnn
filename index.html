@@ -1,65 +1,163 @@
-<!doctype html> 
+<!doctype html>
 <html lang="mn">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Монгол гэр</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body { margin:0; font-family: Arial; background:#111; color:white; }
+    .app { display:flex; height:100vh; }
+    .left-col {
+      width:220px;
+      background:#1b1b1b;
+      padding:15px;
+    }
+    .menu-btn {
+      display:block;
+      padding:8px;
+      margin:5px 0;
+      background:#333;
+      color:white;
+      text-decoration:none;
+      border-radius:6px;
+    }
+    .main-col { flex:1; display:flex; flex-direction:column; }
+    .viewer { flex:1; position:relative; }
+    .canvas-wrap { width:100%; height:100%; }
+    .viewer-controls {
+      position:absolute;
+      top:15px;
+      left:15px;
+      z-index:10;
+    }
+    .control-btn {
+      padding:8px 12px;
+      margin-right:5px;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+    }
+    .primary { background:#00aaff; color:white; }
+  </style>
 </head>
+
 <body>
-  <div class="app">
-    <!-- Зүүн меню -->
-    <aside class="left-col">
-      <div class="logo">Монгол гэр</div>
-      <button id="collapseBtn" class="collapse-btn">⮜</button>
-      
+<div class="app">
 
-      <nav class="menu">
-        <a href="index.html" class="menu-btn active">Үндсэн нүүр</a>
-        <a href="gerbarih.html" class="menu-btn">Гэр барих</a>
-        <a href="medeelel.html" class="menu-btn">Мэдээлэл</a>
-        <a href="togloom.html" class="menu-btn">Тоглоом</a>
-        <a href="puzzle.html" class="menu-btn">Puzzle</a>
-        
-      </nav>
-      
-      <div class="menu-panel" id="menuPanel">
-        <!-- JS-ээр агуулга нэмэгдэх хэсэг -->
+  <aside class="left-col">
+    <h3>Монгол гэр</h3>
+    <a href="#" class="menu-btn">Үндсэн нүүр</a>
+    <a href="#" class="menu-btn">Гэр барих</a>
+    <a href="#" class="menu-btn">Мэдээлэл</a>
+  </aside>
+
+  <main class="main-col">
+    <section class="viewer">
+      <div class="viewer-controls">
+        <button id="showAll" class="control-btn primary">Бүгдийг харуулах</button>
+        <button id="toggleDoor" class="control-btn">Хаалга нээх</button>
       </div>
-    </aside>
-    <button class="mini-open-btn" id="miniOpenBtn">⮞</button>
+      <div id="canvasWrap" class="canvas-wrap"></div>
+    </section>
+  </main>
 
-    <!-- Гол хэсэг -->
-    <main class="main-col">
-      <header class="main-header">
-        <h2 id="pageTitle">Үндсэн нүүр</h2>
-      </header>
+</div>
 
-      <section class="viewer">
-        <div class="viewer-controls">
-          <button id="showAll" class="control-btn primary">Бүгдийг харуулах</button>
-          <button id="toggleDoor" class="control-btn">Хаалга нээх</button>
-        </div>
-        <div id="canvasWrap" class="canvas-wrap"></div>
-        
-      </section>
+<!-- ================= THREE JS MODULE ================= -->
+<script type="module">
 
-      <section class="bottom-info" id="bottomInfo">
-        <h3>Товч мэдээлэл</h3>
-        <p id="homeText">
-         <p>Монгол гэр нь нүүдэлчин ахуйн орон байр бөгөөд ёс заншлын чухал хэсэг юм.
-          Үндсэн нүүр талбар дээр 3D загварыг харж болно.</p>
-          <p>
-          "Гэр барих" товч дээр дарахад бүрэлдэхүүн хэсгүүд болон барих дараалал харагдах ба тухайн хэсгийг дарж 3D дээр нэг нэгээр гаргана.</p>
-        </p>
-        <p>Гүйцэтгэсэн оюутнууд: В231880017 Г.Бөртэ-Үжин, В231880020 Б.Сэржмядаг, В231880008 Э.Энхжин</p>
-      </section>
-    </main>
-  </div>
-  
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160/build/three.module.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/controls/OrbitControls.js";
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.160/examples/jsm/loaders/GLTFLoader.js";
 
+const container = document.getElementById('canvasWrap');
+const toggleDoorBtn = document.getElementById("toggleDoor");
 
+/* RENDERER */
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setSize(container.clientWidth, container.clientHeight);
+container.appendChild(renderer.domElement);
 
-  <script type="module" src="main_open.js"></script>
+/* SCENE */
+const scene = new THREE.Scene();
+
+/* CAMERA */
+const camera = new THREE.PerspectiveCamera(60, container.clientWidth/container.clientHeight, 0.1, 2000);
+camera.position.set(0,15,40);
+
+/* CONTROLS */
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+
+/* LIGHT */
+scene.add(new THREE.AmbientLight(0xffffff,1.5));
+const dir = new THREE.DirectionalLight(0xffffff,2);
+dir.position.set(10,20,10);
+scene.add(dir);
+
+/* GROUND */
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(100,100),
+  new THREE.MeshStandardMaterial({color:0x769568})
+);
+ground.rotation.x = -Math.PI/2;
+scene.add(ground);
+
+/* LOADER */
+const loader = new GLTFLoader();
+
+let doorClosed = null;
+let doorOpen = null;
+let isDoorOpen = false;
+
+/* LOAD MODELS */
+loader.load("ger.glb", gltf=>{
+  scene.add(gltf.scene);
+});
+
+loader.load("haalga1.glb", gltf=>{
+  doorClosed = gltf.scene;
+  scene.add(doorClosed);
+});
+
+loader.load("haalga1_o.glb", gltf=>{
+  doorOpen = gltf.scene;
+  doorOpen.visible=false;
+  scene.add(doorOpen);
+});
+
+/* BUTTON */
+toggleDoorBtn.addEventListener("click",()=>{
+  if(!doorClosed || !doorOpen) return;
+
+  if(!isDoorOpen){
+    doorClosed.visible=false;
+    doorOpen.visible=true;
+    toggleDoorBtn.innerText="Хаах";
+  } else {
+    doorClosed.visible=true;
+    doorOpen.visible=false;
+    toggleDoorBtn.innerText="Хаалга нээх";
+  }
+  isDoorOpen=!isDoorOpen;
+});
+
+/* RESIZE */
+window.addEventListener("resize",()=>{
+  camera.aspect = container.clientWidth/container.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(container.clientWidth, container.clientHeight);
+});
+
+/* LOOP */
+function animate(){
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene,camera);
+}
+animate();
+
+</script>
 </body>
 </html>
