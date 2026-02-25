@@ -78,7 +78,7 @@ scene.add(hotspot);
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-/* ================= LOAD GER (STATIC) ================= */
+/* ================= LOAD GER (STATIC) ================= 
 loader.load(
   "ger.glb",
   (gltf) => {
@@ -89,7 +89,7 @@ loader.load(
   (err) => {
     console.error("MODEL ERROR", err);
   }
-);
+);*/
 
 /* ================= LOAD CLOSED DOOR ================= */
 loader.load('haalga1.glb', gltf => {
@@ -105,63 +105,8 @@ loader.load('haalga1.glb', gltf => {
   });
 });
 
-/* ================= LOAD OPEN DOOR ================= */
-loader.load('haalga1_o.glb', gltf => {
-  doorOpen = gltf.scene;
-  doorOpen.visible = false;
-  scene.add(doorOpen);
-
-  doorOpen.traverse(o => {
-    if (o.isMesh) {
-      o.material.side = THREE.DoubleSide;
-      o.material.transparent = true;
-      o.material.opacity = 0;
-    }
-  });
-});
-
-/* ================= HOTSPOT CLICK ================= */
-renderer.domElement.addEventListener("pointerdown", e => {
-  if (isDoorOpen) return;
-
-  const r = renderer.domElement.getBoundingClientRect();
-  mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
-  mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-  if (raycaster.intersectObject(hotspot).length > 0) openDoor();
-});
-
-/* ================= OPEN / CLOSE ================= */
-function openDoor() {
-  if (!doorClosed || !doorOpen) return;
 
 
-  doorClosed.visible = false;
-
-  doorOpen.visible = true;
-  animDirection = 1;
-  animProgress = 0;
-
-  hotspot.visible = false;
-  isDoorOpen = true;
-  toggleDoorBtn.innerText = "Хаах";
-}
-
-
-function closeDoor() {
-  animDirection = -1;
-  animProgress = 1;
-
-  hotspot.visible = true;
-  isDoorOpen = false;
-  toggleDoorBtn.innerText = "Хаалга нээх";
-}
-
-toggleDoorBtn.addEventListener("click", () => {
-  if (!isDoorOpen) openDoor();
-  else closeDoor();
-});
 
 /* ================= CAMERA FIT ================= */
 function fitCameraToObject(object) {
@@ -216,5 +161,6 @@ function animate() {
 }
 
 animate();
+
 
 
